@@ -2,8 +2,9 @@ let myFont;
 let tgd, tga;
 let backgroundFill;
 let dimUp, dimCounter;
-let rotationSpeed, slider;
-let digital;
+let rotationSpeed;
+let btnPlus, btnMinus, btnSwitch;
+let bDigital;
 
 const BACKGR_LOWER_LIMIT = 50;
 const BACKGR_UPPER_LIMIT = 100;
@@ -38,13 +39,45 @@ function setup() {
   //Set auxilliary variables
   dimUp = true;
   dimCounter = 0;
-  rotationSpeed = 30;
-  digital = true;
+  rotationSpeed = 80;
+  bDigital = false;
 
-  //Set up slider
-  slider = createSlider(10, 150, 50);
-  slider.position(10, 10);
-  slider.style("width", "80px");
+  //Set font for canvas needed for WebGL
+  textFont(myFont);
+  
+  drawControls();
+}
+
+function btnPressedPlus(){
+  //print("btn pressed");
+  if (rotationSpeed < 300) rotationSpeed += 20;
+}
+
+function btnPressedMinus(){
+  //print("btn pressed");
+  if (rotationSpeed > 20) rotationSpeed -= 20;
+}
+function btnPressedSwitch(){
+  //print("btn pressed");
+  bDigital = !bDigital;
+}
+
+function drawControls() {
+  btnPlus = createButton('+');
+  btnPlus.position(20, 0);
+  btnPlus.mousePressed(btnPressedPlus);
+ 
+  btnMinus = createButton('-');
+  btnMinus.position(0, 0);
+  btnMinus.mousePressed(btnPressedMinus);
+
+  btnPlus = createButton('A/D');
+  btnPlus.position(50, 0);
+  btnPlus.mousePressed(btnPressedSwitch);
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
 
 function getTimeString() {
@@ -162,14 +195,10 @@ function drawAnalogue() {
 
 function draw() {
   background(getBackgroundColor(), 0, 0);
-  rotationSpeed = slider.value();
   rotateY((frameCount / 10000) * rotationSpeed);
   rotateX((frameCount / 10000) * rotationSpeed);
-  texture(digital ? drawDigital() : drawAnalogue());
+  texture(bDigital ? drawDigital() : drawAnalogue());
   stroke(10, 20, 180);
   box(300, 300);
 }
 
-function mousePressed() {
-  digital = !digital;
-}
