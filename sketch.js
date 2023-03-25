@@ -1,4 +1,5 @@
 let myFont;
+
 let tgd, tga;
 let backgroundFill;
 let dimUp, dimCounter;
